@@ -1,14 +1,8 @@
 # api-DoRa
 
-🚀 Alur Kerja Branching
-Kami menggunakan alur kerja GitFlow yang disederhanakan untuk mengelola pengembangan fitur dan perbaikan bug. Branch main harus selalu bersih dan stabil.
+🚧 Peran Branch dev
+Pusat Integrasi: Semua branch fitur (feat/) dan perbaikan bug (fix/) digabungkan ke branch ini. Ini berfungsi sebagai tempat pengujian integrasi (integration testing) di mana kita memastikan semua fitur bekerja sama dengan baik.
 
-Branch Utama
-main: Branch ini berisi kode yang sudah diuji, stabil, dan siap untuk rilis produksi. Jangan pernah melakukan commit langsung ke branch ini. Semua perubahan harus datang dari branch lain melalui Pull Request (PR) setelah melalui proses review.
+Mungkin Tidak Stabil: Berbeda dengan branch main, branch dev mungkin tidak selalu dalam kondisi stabil. Ini wajar, karena kita mengintegrasikan kode dari berbagai pekerjaan yang sedang berlangsung.
 
-dev (Development): Branch ini adalah branch utama untuk pengembangan. Semua fitur baru dan perbaikan bug harus digabungkan (merge) ke branch ini terlebih dahulu. Branch dev mungkin tidak selalu stabil karena merupakan tempat pengujian integrasi.
-
-Branch Fitur dan Perbaikan
-feat/nama-fitur-baru: Gunakan branch ini untuk pengembangan fitur baru.
-
-fix/perbaikan-bug: Gunakan branch ini untuk memperbaiki bug.
+Jalur Menuju main: Setelah kode di dev dianggap stabil, diuji, dan disetujui, barulah branch ini akan digabungkan ke main untuk rilis produksi.
