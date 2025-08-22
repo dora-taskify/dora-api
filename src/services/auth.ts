@@ -1,5 +1,5 @@
-import prisma from "../lib/prisma";
-import { supabase } from "../lib/supabase";
+import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function handleRegisterAuth(email: string, password: string, username: string) {
     const { data, error: registerErr } = await supabase.auth.signUp({

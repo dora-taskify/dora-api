@@ -1,7 +1,7 @@
 import express from "express"
 import { Request, Response } from "express"
-import { loginAuth, registerAuth } from "../controllers/auth"
-import { authenticate } from "../middlewares/authentication"
+import { loginAuth, registerAuth } from "@/controllers/auth"
+import { authenticate } from "@/middlewares/authentication"
 
 const route = express.Router()
 
