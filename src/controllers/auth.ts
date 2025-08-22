@@ -7,22 +7,24 @@ export async function registerAuth(req: Request, res: Response) {
         const { email, password, username } = req.body;
         const { error } = registerSchema.validate(req.body);
         if (error) {
-            throw Error("username, email, password is invalid")
+            throw Error(error.message)
         }
         const result = await handleRegisterAuth(email, password, username);
         const { data, registerErr, profile } = result;
-        if (registerErr) {
-            throw Error(registerErr.message)
+        if (!data || registerErr) {
+            throw Error(registerErr?.message)
         }
         res.cookie("token", data.session?.access_token, {
-            secure: process.env.COOKIE_SECRET === "production",
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000
         })
         return res.status(200).json({
             code: 200,
             status: "success",
             message: "register account success",
-            data: data
+            data: data.user
         });
     } catch (err: any) {
         return res.status(500).json({
@@ -38,22 +40,24 @@ export async function loginAuth(req: Request, res: Response) {
         const { email, password } = req.body
         const { error } = loginSchema.validate(req.body)
         if (error) {
-            throw Error("email and password is invalid")
+            throw Error(error.message)
         }
         const result = await handleLoginAuth(email, password)
         const { data, loginErr } = result;
-        if (error) {
+        if (!data || loginErr) {
             throw Error(loginErr?.message)
         }
         res.cookie("token", data.session?.access_token, {
-            secure: process.env.COOKIE_SECRET === "production",
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000
         })
         return res.status(200).json({
             code: 200,
             status: "success",
             message: "login account success",
-            data: data
+            data: data.user
         });
     } catch (err: any) {
         return res.status(500).json({

@@ -1,26 +1,32 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
-export function authenticate(
-    req: Request,
-    res: Response,
-    next: NextFunction) {
+export function authenticate(req: Request, res: Response, next: NextFunction) {
     try {
-        const token = req.cookies.token
+        const token = req.cookies.token;
         if (!token) {
-            throw Error("unauthorized")
+            return res.status(401).json({
+                code: 401,
+                status: "error",
+                message: "Unauthorized: No token provided"
+            });
         }
 
-        const user = jwt.decode(token);
+        const secret = process.env.SUPABASE_JWT_SECRET as string;
+        const decoded = jwt.verify(token, secret) as JwtPayload;
 
-        (req as any).user = user
-        next()
+        (req as any).user = {
+            id: decoded.sub,
+            email: decoded.email,
+            role: decoded.role,
+        };
 
+        next();
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
+        return res.status(401).json({
+            code: 401,
             status: "error",
-            message: "register account errorr " + err.message
+            message: "Unauthorized: " + err.message
         });
     }
 }
