@@ -1,8 +1,19 @@
 import express from "express"
+import cookieParser from "cookie-parser"
+import dotenv from "dotenv"
+import route from "@/routes/auth"
+import { corsMiddleware } from "@/middlewares/cors"
 
+dotenv.config()
 const app = express()
+const PORT = process.env.PORT
 
-const PORT = 3000
+app.use(express.json())
+app.use(cookieParser())
+app.use(corsMiddleware)
+
+app.use('/api/v1', route)
+
 
 app.listen(PORT, () => {
     console.log(`server listening on PORT ${PORT}`)
