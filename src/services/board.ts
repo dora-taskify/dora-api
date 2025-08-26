@@ -1,8 +1,6 @@
 import prisma from "@/lib/prisma";
 
-export async function handleGetBoard(
-    email: string
-) {
+export async function handleGetBoard(email: string) {
     const profile = await prisma.profile.findUnique({
         where: {
             email
@@ -21,10 +19,7 @@ export async function handleGetBoard(
     return data;
 };
 
-export async function handleGetBoardDetail(
-    email: string,
-    id: number
-) {
+export async function handleGetBoardDetail(email: string, id: number) {
     const profile = await prisma.profile.findUnique({
         where: {
             email
@@ -46,10 +41,7 @@ export async function handleGetBoardDetail(
     return data;
 }
 
-export async function handleCreateBoard(
-    email: string,
-    name: string,
-) {
+export async function handleCreateBoard(email: string, name: string) {
     const profile = await prisma.profile.findUnique({
         where: {
             email
@@ -90,11 +82,7 @@ export async function handleCreateBoard(
     })
 }
 
-export async function handleUpdateBoard(
-    email: string,
-    id: number,
-    name: string
-) {
+export async function handleUpdateBoard(email: string, id: number, name: string) {
     const profile = await prisma.profile.findUnique({
         where: {
             email
@@ -119,10 +107,7 @@ export async function handleUpdateBoard(
     return data
 }
 
-export async function handleArchieveBoard(
-    email: string,
-    id: number
-) {
+export async function handleArchieveBoard(email: string, id: number) {
     const profile = await prisma.profile.findUnique({
         where: {
             email
@@ -171,10 +156,7 @@ export async function handleArchieveBoard(
     }
 }
 
-export async function handleDeleteBoard(
-    email: string,
-    id: number
-) {
+export async function handleDeleteBoard(email: string, id: number) {
     const profile = await prisma.profile.findUnique({
         where: {
             email

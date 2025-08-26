@@ -3,9 +3,9 @@ import { Request, Response } from "express";
 
 export async function getListDetail(req: Request, res: Response) {
     try {
-        const email = (req as any).user.email;
-        const { board_id, list_id } = req.query
-        const result = await handleGetListDetail(Number(board_id), email, Number(list_id))
+        const board_id = (req as any).board.id;
+        const { list_id } = req.query
+        const result = await handleGetListDetail(board_id, Number(list_id))
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -23,10 +23,9 @@ export async function getListDetail(req: Request, res: Response) {
 
 export async function createList(req: Request, res: Response) {
     try {
+        const board_id = (req as any).board.id;
         const { name, description } = req.body;
-        const { board_id } = req.query;
-        const email = (req as any).user.email;
-        const result = await handleCreateList(email, name, description, Number(board_id))
+        const result = await handleCreateList(board_id, name, description)
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -44,10 +43,10 @@ export async function createList(req: Request, res: Response) {
 
 export async function updateList(req: Request, res: Response) {
     try {
+        const board_id = (req as any).board.id;
         const { name, description } = req.body;
-        const { board_id, list_id } = req.query;
-        const email = (req as any).user.email;
-        const result = await handleUpdateList(email, Number(board_id), Number(list_id), name, description)
+        const { list_id } = req.query;
+        const result = await handleUpdateList(board_id, Number(list_id), name, description)
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -65,9 +64,9 @@ export async function updateList(req: Request, res: Response) {
 
 export async function archieveList(req: Request, res: Response) {
     try {
-        const { board_id, list_id } = req.query;
-        const email = (req as any).user.email;
-        const result = await handleArchieveList(email, Number(board_id), Number(list_id))
+        const board_id = (req as any).board.id;
+        const { list_id } = req.query;
+        const result = await handleArchieveList(board_id, Number(list_id))
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -85,9 +84,9 @@ export async function archieveList(req: Request, res: Response) {
 
 export async function deleteList(req: Request, res: Response) {
     try {
-        const { board_id, list_id } = req.query;
-        const email = (req as any).user.email;
-        await handleDeleteList(Number(board_id), email, Number(list_id));
+        const board_id = (req as any).board.id;
+        const { list_id } = req.query;
+        await handleDeleteList(board_id, Number(list_id));
         return res.status(200).json({
             code: 200,
             status: "success",

@@ -1,23 +1,6 @@
 import prisma from "@/lib/prisma";
 
-export async function handleGetListDetail(board_id: number, email: string, list_id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    });
-    if (!profile) {
-        throw Error("user not found")
-    };
-    const board = await prisma.board.findUnique({
-        where: {
-            id: board_id,
-            created_by: profile.id,
-        }
-    });
-    if (!board) {
-        throw Error("board not found")
-    }
+export async function handleGetListDetail(board_id: number, list_id: number) {
     const result = await prisma.list.findUnique({
         where: {
             id: list_id,
@@ -27,24 +10,7 @@ export async function handleGetListDetail(board_id: number, email: string, list_
 
     return result
 }
-export async function handleCreateList(email: string, name: string, description: string, board_id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-    if (!profile) {
-        throw Error("user not found")
-    }
-    const board = await prisma.board.findUnique({
-        where: {
-            id: board_id,
-            created_by: profile.id
-        }
-    })
-    if (!board) {
-        throw Error("board not found")
-    }
+export async function handleCreateList(board_id: number, name: string, description: string) {
     const result = await prisma.list.create({
         data: {
             name,
@@ -56,24 +22,7 @@ export async function handleCreateList(email: string, name: string, description:
     return result;
 }
 
-export async function handleUpdateList(email: string, board_id: number, list_id: number, name: string, description: string) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-    if (!profile) {
-        throw Error("user not found")
-    }
-    const board = await prisma.board.findUnique({
-        where: {
-            id: board_id,
-            created_by: profile.id
-        }
-    })
-    if (!board) {
-        throw Error('board not found')
-    }
+export async function handleUpdateList(board_id: number, list_id: number, name: string, description: string) {
     const result = await prisma.list.update({
         where: {
             id: list_id,
@@ -88,28 +37,11 @@ export async function handleUpdateList(email: string, board_id: number, list_id:
     return result;
 }
 
-export async function handleArchieveList(email: string, board_id: number, list_id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-    if (!profile) {
-        throw Error("user not found")
-    }
-    const board = await prisma.board.findUnique({
-        where: {
-            id: board_id,
-            created_by: profile.id
-        }
-    })
-    if (!board) {
-        throw Error("board not found")
-    }
+export async function handleArchieveList(board_id: number, list_id: number) {
     const data = await prisma.list.findUnique({
         where: {
             id: list_id,
-            board_id: board.id
+            board_id
         }
     })
 
@@ -139,29 +71,12 @@ export async function handleArchieveList(email: string, board_id: number, list_i
     }
 }
 
-export async function handleDeleteList(board_id: number, email: string, list_id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-    if (!profile) {
-        throw Error("user not found")
-    }
-    const board = await prisma.board.findUnique({
-        where: {
-            id: board_id,
-            created_by: profile.id
-        }
-    })
-    if (!board) {
-        throw Error("board not found")
-    }
+export async function handleDeleteList(board_id: number, list_id: number) {
     await prisma.list.delete({
         where: {
             id: list_id,
             is_archieved: true,
-            board_id: board.id
+            board_id
         }
     })
 }
