@@ -1,8 +1,12 @@
 import express from "express"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
-import route from "@/routes/auth"
+
 import { corsMiddleware } from "@/middlewares/cors"
+
+import routeAuth from "@/routes/auth"
+import routeBoard from "@/routes/board"
+import routeList from "@/routes/list"
 
 dotenv.config()
 const app = express()
@@ -12,7 +16,9 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(corsMiddleware)
 
-app.use('/api/v1', route)
+app.use('/api/v1', routeAuth)
+app.use('/api/v1', routeBoard)
+app.use('/api/v1', routeList)
 
 
 app.listen(PORT, () => {

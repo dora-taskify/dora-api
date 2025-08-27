@@ -8,10 +8,46 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum label {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
 model profile {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  email      String   @unique
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String @unique
   created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+
+  board board[]
+}
+
+model board {
+  id Int @id @default(autoincrement())
+  name String 
+  created_by Int 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  image String?
+  is_archieved Boolean @default(false)
+  profile profile @relation(fields: [created_by], references: [id])
+
+  list list[]
+}
+
+model list {
+  id Int @id @default(autoincrement())
+  name String 
+  description String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  image String?
+  is_archieved Boolean @default(false)
+
+  board_id Int
+  board board @relation(fields: [board_id], references: [id], onDelete: Cascade)
+  
 }
