@@ -50,4 +50,20 @@ model list {
   board_id Int
   board board @relation(fields: [board_id], references: [id], onDelete: Cascade)
   
+  task task[]
+}
+
+model task {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  position Int
+  is_done Boolean @default(false)
+  priority label @default(MEDIUM)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+  deadline DateTime?
+
+  list_id Int
+  list list @relation(fields: [list_id], references: [id])
 }
