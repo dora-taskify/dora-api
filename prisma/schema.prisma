@@ -66,4 +66,17 @@ model task {
 
   list_id Int
   list list @relation(fields: [list_id], references: [id])
+
+  item item[]
+}
+
+model item {
+  id Int @id @default(autoincrement())
+  content String
+  is_done Boolean @default(false)
+  created_at DateTime @default(now())
+  update_at DateTime @updatedAt
+
+  task_id Int
+  task task @relation(fields: [task_id], references: [id])
 }
