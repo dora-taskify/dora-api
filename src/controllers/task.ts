@@ -1,4 +1,5 @@
-import { handleCreateTask, handleDeleteTask, handleGetTask, handleGetTaskDetail, handleUpdateTask } from "@/services/taks";
+import prisma from "@/lib/prisma";
+import { handleCreateTask, handleDeleteTask, handleGetTask, handleGetTaskDetail, handleMoveTask, handleUpdateTask } from "@/services/taks";
 import { Request, Response } from "express";
 
 export async function getTask(req: Request, res: Response) {
@@ -96,6 +97,26 @@ export async function deleteTask(req: Request, res: Response) {
             code: 500,
             status: "error",
             message: "get task error " + err.message
+        });
+    }
+}
+
+export async function moveTask(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const { destinationListId, newPosition } = req.body;
+        const result = await handleMoveTask(Number(id), Number(destinationListId), Number(newPosition));
+        return res.status(200).json({
+            code: 200,
+            status: "success",
+            message: "Move task success",
+            data: result,
+        });
+    } catch (err: any) {
+        return res.status(500).json({
+            code: 500,
+            status: "error",
+            message: "Move task error: " + err.message,
         });
     }
 }
