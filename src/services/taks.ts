@@ -60,3 +60,50 @@ export function handleDeleteTask(list_id: number, task_id: number) {
 
     return data
 }
+
+export async function handleMoveTask(taskId: number, destinationListId: number, newPosition: number) {
+    const data = await prisma.$transaction(async (tx) => {
+        const taskToMove = await tx.task.findUnique({
+            where: { id: taskId },
+        });
+
+        if (!taskToMove) {
+            throw new Error('task not found');
+        }
+
+        const sourceListId = taskToMove.list_id;
+        const oldPosition = taskToMove.position;
+
+        await tx.task.updateMany({
+            where: {
+                list_id: sourceListId,
+                position: { gt: oldPosition },
+            },
+            data: {
+                position: { decrement: 1 },
+            },
+        });
+
+        await tx.task.updateMany({
+            where: {
+                list_id: destinationListId,
+                position: { gte: newPosition },
+            },
+            data: {
+                position: { increment: 1 },
+            },
+        });
+
+        const updatedTask = await tx.task.update({
+            where: { id: taskId },
+            data: {
+                list_id: destinationListId,
+                position: newPosition,
+            },
+        });
+
+        return updatedTask;
+    });
+
+    return data;
+}
