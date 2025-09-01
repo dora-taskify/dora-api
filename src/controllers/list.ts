@@ -3,9 +3,8 @@ import { Request, Response } from "express";
 
 export async function getListDetail(req: Request, res: Response) {
     try {
-        const board_id = (req as any).board.id;
-        const { list_id } = req.query
-        const result = await handleGetListDetail(board_id, Number(list_id))
+        const { list_id } = req.params;
+        const result = await handleGetListDetail(Number(list_id))
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -43,10 +42,9 @@ export async function createList(req: Request, res: Response) {
 
 export async function updateList(req: Request, res: Response) {
     try {
-        const board_id = (req as any).board.id;
+        const list_id = (req as any).list.id;
         const { name, description } = req.body;
-        const { list_id } = req.query;
-        const result = await handleUpdateList(board_id, Number(list_id), name, description)
+        const result = await handleUpdateList(Number(list_id), name, description)
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -64,9 +62,8 @@ export async function updateList(req: Request, res: Response) {
 
 export async function archieveList(req: Request, res: Response) {
     try {
-        const board_id = (req as any).board.id;
-        const { list_id } = req.query;
-        const result = await handleArchieveList(board_id, Number(list_id))
+        const list_id = (req as any).list.id;
+        const result = await handleArchieveList(Number(list_id))
         return res.status(200).json({
             code: 200,
             status: "success",

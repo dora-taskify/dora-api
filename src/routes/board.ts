@@ -1,6 +1,7 @@
-import { archieveBoard, createBoard, deleteBoard, getBoard, getBoardDetail, updateBoard } from "@/controllers/board"
 import express from "express"
 import { authenticate } from '@/middlewares/authentication';
+import { archieveBoard, createBoard, deleteBoard, getBoard, getBoardDetail, updateBoard } from "@/controllers/board"
+import { boardMemberAccess } from '@/middlewares/boardMemberAccess';
 
 const route = express.Router()
 

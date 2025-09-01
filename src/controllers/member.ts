@@ -4,8 +4,8 @@ import { Request, Response } from "express";
 export async function inviteMemberBoard(req: Request, res: Response) {
     try {
         const { board_id } = req.params;
-        const { profile_id } = req.body;
-        const result = await handleInviteMemberBoard(Number(board_id), Number(profile_id));
+        const { profile_email } = req.body;
+        const result = await handleInviteMemberBoard(Number(board_id), profile_email);
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -23,7 +23,7 @@ export async function inviteMemberBoard(req: Request, res: Response) {
 
 export async function memberBoard(req: Request, res: Response) {
     try {
-        const { board_id } = req.params;
+        const board_id = (req as any).board.id;
         const result = await handleMemberBoard(Number(board_id));
         return res.status(200).json({
             code: 200,
@@ -42,8 +42,8 @@ export async function memberBoard(req: Request, res: Response) {
 
 export async function deleteMemberBoard(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const result = await handleDeleteMemberBoard(Number(id));
+        const { member_id } = req.params;
+        const result = await handleDeleteMemberBoard(Number(member_id));
         return res.status(200).json({
             code: 200,
             status: "success",

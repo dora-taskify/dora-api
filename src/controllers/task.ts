@@ -23,9 +23,8 @@ export async function getTask(req: Request, res: Response) {
 
 export async function getTaskDetail(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const { list_id } = req.query;
-        const result = await handleGetTaskDetail(Number(list_id), Number(id))
+        const task_id = (req as any).task.id;
+        const result = await handleGetTaskDetail(Number(task_id))
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -43,9 +42,9 @@ export async function getTaskDetail(req: Request, res: Response) {
 
 export async function createTask(req: Request, res: Response) {
     try {
-        const { list_id } = req.query;
+        const list_id = (req as any).list.id
         const { name, description, position, deadline } = req.body;
-        const result = await handleCreateTask(Number(list_id), name, description, position, deadline)
+        const result = await handleCreateTask(list_id, name, description, position, deadline)
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -63,10 +62,9 @@ export async function createTask(req: Request, res: Response) {
 
 export async function updateTask(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const { list_id } = req.query;
+        const task_id = (req as any).task.id;
         const { name, description } = req.body;
-        const result = await handleUpdateTask(Number(list_id), Number(id), name, description)
+        const result = await handleUpdateTask(task_id, name, description)
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -84,13 +82,14 @@ export async function updateTask(req: Request, res: Response) {
 
 export async function deleteTask(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const { list_id } = req.query;
-        await handleDeleteTask(Number(list_id), Number(id))
+        const list_id = (req as any).list.id;
+        const task_id = (req as any).task.id;
+        const result = await handleDeleteTask(list_id, task_id)
         return res.status(200).json({
             code: 200,
             status: "success",
             message: "delete task success",
+            data: result
         });
     } catch (err: any) {
         return res.status(500).json({
@@ -103,9 +102,10 @@ export async function deleteTask(req: Request, res: Response) {
 
 export async function moveTask(req: Request, res: Response) {
     try {
-        const { id } = req.params;
+        const task_id = (req as any).task.id;
+        const board_id = (req as any).board.id;
         const { destinationListId, newPosition } = req.body;
-        const result = await handleMoveTask(Number(id), Number(destinationListId), Number(newPosition));
+        const result = await handleMoveTask(board_id, task_id, Number(destinationListId), Number(newPosition));
         return res.status(200).json({
             code: 200,
             status: "success",

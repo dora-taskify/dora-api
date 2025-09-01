@@ -12,8 +12,12 @@ export async function handleGetBoard(email: string) {
 
     const data = await prisma.board.findMany({
         where: {
-            created_by: profile.id
-        }
+            OR: [
+                { created_by: profile.id },
+                { board_member: { some: { profile_id: profile.id } } }
+            ]
+        },
+
     });
 
     return data;
