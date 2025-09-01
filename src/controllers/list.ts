@@ -1,11 +1,31 @@
-import { handleArchieveList, handleCreateList, handleDeleteList, handleGetListDetail, handleUpdateList } from "@/services/list";
+import { handleArchieveList, handleCreateList, handleDeleteList, handleGetList, handleGetListDetail,  handleUpdateList } from "@/services/list";
 import { Request, Response } from "express";
+
+
+export async function getList(req: Request, res: Response) {
+    try {
+        const board_id = (req as any).board.id;
+        const result = await handleGetList(board_id)
+        return res.status(200).json({
+            code: 200,
+            status: "success",
+            message: "get list detail success",
+            data: result
+        });
+    } catch (err: any) {
+        return res.status(500).json({
+            code: 500,
+            status: "error",
+            message: "get list detail error " + err.message
+        });
+    }
+}
 
 export async function getListDetail(req: Request, res: Response) {
     try {
-        const board_id = (req as any).board.id;
         const { list_id } = req.query
-        const result = await handleGetListDetail(board_id, Number(list_id))
+        const board_id = (req as any).board.id
+        const result = await handleGetListDetail(Number(board_id), Number(list_id))
         return res.status(200).json({
             code: 200,
             status: "success",

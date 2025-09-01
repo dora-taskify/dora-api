@@ -1,7 +1,17 @@
 import prisma from "@/lib/prisma";
 
+export async function handleGetList(board_id: number) {
+    const result = await prisma.list.findMany({
+        where: {
+            board_id
+        }
+    });
+
+    return result
+}
+
 export async function handleGetListDetail(board_id: number, list_id: number) {
-    const result = await prisma.list.findUnique({
+    const result = await prisma.list.findFirst({
         where: {
             id: list_id,
             board_id,
@@ -10,6 +20,7 @@ export async function handleGetListDetail(board_id: number, list_id: number) {
 
     return result
 }
+
 export async function handleCreateList(board_id: number, name: string, description: string) {
     const result = await prisma.list.create({
         data: {
