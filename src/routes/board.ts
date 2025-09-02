@@ -6,11 +6,10 @@ import { boardMemberAccess } from '@/middlewares/boardMemberAccess';
 const route = express.Router()
 
 route.get('/board', authenticate, getBoard)
-route.get('/board/:id', authenticate, getBoardDetail)
+route.get('/board/:board_id', authenticate, boardMemberAccess, getBoardDetail)
 route.post('/board', authenticate, createBoard)
-route.patch('/board/:id', authenticate, updateBoard)
-route.patch('/archieve-board/:id', authenticate, archieveBoard)
-route.delete('/delete/:id', authenticate, deleteBoard)
-
+route.patch('/board/:board_id', authenticate, boardMemberAccess, updateBoard)
+route.patch('/archieve-board/:board_id', authenticate, boardMemberAccess, archieveBoard)
+route.delete('/delete/:board_id', authenticate, boardMemberAccess, deleteBoard)
 
 export default route

@@ -43,8 +43,8 @@ export async function getTaskDetail(req: Request, res: Response) {
 export async function createTask(req: Request, res: Response) {
     try {
         const list_id = (req as any).list.id
-        const { name, description, position, deadline } = req.body;
-        const result = await handleCreateTask(list_id, name, description, position, deadline)
+        const { name, description, deadline, priority } = req.body;
+        const result = await handleCreateTask(list_id, name, description, deadline, priority)
         return res.status(200).json({
             code: 200,
             status: "success",
@@ -63,8 +63,8 @@ export async function createTask(req: Request, res: Response) {
 export async function updateTask(req: Request, res: Response) {
     try {
         const task_id = (req as any).task.id;
-        const { name, description } = req.body;
-        const result = await handleUpdateTask(task_id, name, description)
+        const { name, description, priority } = req.body;
+        const result = await handleUpdateTask(task_id, name, description, priority)
         return res.status(200).json({
             code: 200,
             status: "success",

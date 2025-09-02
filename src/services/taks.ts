@@ -1,3 +1,4 @@
+import { label } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 
 export async function handleGetTask(list_id: number) {
@@ -14,13 +15,14 @@ export async function handleGetTaskDetail(taks_id: number) {
     const data = prisma.task.findUnique({
         where: {
             id: taks_id
-        }
+        },
+        include: { item: true }
     })
 
     return data
 }
 
-export async function handleCreateTask(list_id: number, name: string, description: string, position: number, deadline: string) {
+export async function handleCreateTask(list_id: number, name: string, description: string, deadline: string, priority: label) {
     const maxTask = await prisma.task.findFirst({
         where: { list_id },
         orderBy: { position: "desc" }
@@ -33,21 +35,23 @@ export async function handleCreateTask(list_id: number, name: string, descriptio
             name,
             description,
             position: newPosition,
-            deadline
+            deadline,
+            priority
         }
     })
 
     return data
 }
 
-export async function handleUpdateTask(task_id: number, name: string, description: string) {
+export async function handleUpdateTask(task_id: number, name: string, description: string, priority: label) {
     const data = prisma.task.update({
         where: {
             id: task_id
         },
         data: {
             name,
-            description
+            description,
+            priority
         }
     })
 
