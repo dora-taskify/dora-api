@@ -69,7 +69,7 @@ model task {
   deadline DateTime?
 
   list_id Int
-  list list @relation(fields: [list_id], references: [id])
+  list list @relation(fields: [list_id], references: [id], onDelete: Cascade)
 
   item item[]
 }
@@ -82,7 +82,7 @@ model item {
   update_at DateTime @updatedAt
 
   task_id Int
-  task task @relation(fields: [task_id], references: [id])
+  task task @relation(fields: [task_id], references: [id], onDelete: Cascade)
 }
 
 model board_member {

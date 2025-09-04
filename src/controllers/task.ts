@@ -1,11 +1,18 @@
-import prisma from "@/lib/prisma";
+import { label } from "@/generated/prisma";
 import { handleCreateTask, handleDeleteTask, handleGetTask, handleGetTaskDetail, handleMoveTask, handleUpdateTask } from "@/services/taks";
 import { Request, Response } from "express";
 
 export async function getTask(req: Request, res: Response) {
     try {
         const list = (req as any).list
-        const result = await handleGetTask(Number(list.id))
+        const { prio, sortDeadline } = req.query
+        const result = await handleGetTask(
+            Number(list.id),
+            prio ? String(prio) as label : undefined,
+            sortDeadline === "asc" || sortDeadline === "desc"
+                ? (sortDeadline as "asc" | "desc")
+                : undefined
+        );
         return res.status(200).json({
             code: 200,
             status: "success",
