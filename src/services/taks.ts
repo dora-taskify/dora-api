@@ -1,10 +1,14 @@
 import { label } from "@/generated/prisma";
 import prisma from "@/lib/prisma";
 
-export async function handleGetTask(list_id: number) {
+export async function handleGetTask(list_id: number, prio?: label, sortDeadline?: "asc" | "desc") {
     const data = prisma.task.findMany({
         where: {
-            list_id
+            list_id,
+            ...(prio && { priority: prio })
+        },
+        orderBy: {
+            deadline: sortDeadline
         }
     })
 
