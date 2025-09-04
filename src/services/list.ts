@@ -1,10 +1,9 @@
 import prisma from "@/lib/prisma";
 
-export async function handleGetListDetail(board_id: number, list_id: number) {
+export async function handleGetListDetail(list_id: number) {
     const result = await prisma.list.findUnique({
         where: {
             id: list_id,
-            board_id,
         }
     });
 
@@ -22,11 +21,10 @@ export async function handleCreateList(board_id: number, name: string, descripti
     return result;
 }
 
-export async function handleUpdateList(board_id: number, list_id: number, name: string, description: string) {
+export async function handleUpdateList(list_id: number, name: string, description: string) {
     const result = await prisma.list.update({
         where: {
-            id: list_id,
-            board_id
+            id: list_id
         },
         data: {
             name,
@@ -37,19 +35,17 @@ export async function handleUpdateList(board_id: number, list_id: number, name: 
     return result;
 }
 
-export async function handleArchieveList(board_id: number, list_id: number) {
+export async function handleArchieveList(list_id: number) {
     const data = await prisma.list.findUnique({
         where: {
-            id: list_id,
-            board_id
+            id: list_id
         }
     })
 
     if (!data?.is_archieved) {
         const result = await prisma.list.update({
             where: {
-                id: list_id,
-                board_id
+                id: list_id
             },
             data: {
                 is_archieved: true
@@ -60,8 +56,7 @@ export async function handleArchieveList(board_id: number, list_id: number) {
     if (data?.is_archieved) {
         const result = await prisma.list.update({
             where: {
-                id: list_id,
-                board_id
+                id: list_id
             },
             data: {
                 is_archieved: false

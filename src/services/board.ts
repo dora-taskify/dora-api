@@ -5,33 +5,26 @@ export async function handleGetBoard(email: string) {
         where: {
             email
         }
-    });
+    })
     if (!profile) {
-        throw Error("user not found");
-    };
-
+        throw Error("user not found")
+    }
     const data = await prisma.board.findMany({
         where: {
-            created_by: profile.id
-        }
+            OR: [
+                { created_by: profile.id },
+                { board_member: { some: { profile_id: profile.id } } }
+            ]
+        },
     });
 
     return data;
 };
 
-export async function handleGetBoardDetail(email: string, id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    });
-    if (!profile) {
-        throw Error("user not found")
-    };
+export async function handleGetBoardDetail(board_id: number) {
     const data = await prisma.board.findUnique({
         where: {
-            id,
-            created_by: profile.id
+            id: board_id
         },
         include: {
             list: true
@@ -50,8 +43,7 @@ export async function handleCreateBoard(email: string, name: string) {
     if (!profile) {
         throw Error("user not found")
     }
-
-    await prisma.$transaction(async (tx) => {
+    const data = await prisma.$transaction(async (tx) => {
         const board = await tx.board.create({
             data: {
                 name,
@@ -79,22 +71,17 @@ export async function handleCreateBoard(email: string, name: string) {
                 board_id: board.id,
             }
         })
+
+        return board
     })
+
+    return data;
 }
 
-export async function handleUpdateBoard(email: string, id: number, name: string) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-    if (!profile) {
-        throw Error("user not found")
-    }
+export async function handleUpdateBoard(board_id: number, name: string) {
     const data = await prisma.board.update({
         where: {
-            id,
-            created_by: profile.id
+            id: board_id,
         },
         data: {
             name
@@ -107,20 +94,10 @@ export async function handleUpdateBoard(email: string, id: number, name: string)
     return data
 }
 
-export async function handleArchieveBoard(email: string, id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-    if (!profile) {
-        throw Error("user not found")
-    }
-
+export async function handleArchieveBoard(board_id: number) {
     const board = await prisma.board.findUnique({
         where: {
-            id,
-            created_by: profile.id
+            id: board_id,
         }
     });
 
@@ -131,8 +108,7 @@ export async function handleArchieveBoard(email: string, id: number) {
     if (!board?.is_archieved) {
         const data = await prisma.board.update({
             where: {
-                id,
-                created_by: profile.id
+                id: board_id,
             },
             data: {
                 is_archieved: true
@@ -144,8 +120,7 @@ export async function handleArchieveBoard(email: string, id: number) {
     if (board?.is_archieved) {
         const data = await prisma.board.update({
             where: {
-                id,
-                created_by: profile.id
+                id: board_id,
             },
             data: {
                 is_archieved: false
@@ -156,20 +131,10 @@ export async function handleArchieveBoard(email: string, id: number) {
     }
 }
 
-export async function handleDeleteBoard(email: string, id: number) {
-    const profile = await prisma.profile.findUnique({
-        where: {
-            email
-        }
-    })
-
-    if (!profile) {
-        throw Error("user not found")
-    }
+export async function handleDeleteBoard(board_id: number) {
     const board = await prisma.board.findUnique({
         where: {
-            id,
-            created_by: profile.id,
+            id: board_id,
             is_archieved: true
         }
     });
