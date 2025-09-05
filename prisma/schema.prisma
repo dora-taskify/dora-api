@@ -25,6 +25,8 @@ model profile {
   board board[]
 
   board_member board_member[]
+
+  notification notification[]
 }
 
 model board {
@@ -72,6 +74,8 @@ model task {
   list list @relation(fields: [list_id], references: [id], onDelete: Cascade)
 
   item item[]
+
+  notification notification[]
 }
 
 model item {
@@ -93,4 +97,17 @@ model board_member {
 
   profile profile @relation(fields: [profile_id], references: [id], onDelete: Cascade)
   board   board   @relation(fields: [board_id], references: [id], onDelete: Cascade)
+}
+
+model notification {
+  id          Int      @id @default(autoincrement())
+  message     String
+  read     Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  task_id     Int
+  task        task     @relation(fields: [task_id], references: [id], onDelete: Cascade)
+
+  profile_id  Int
+  profile     profile  @relation(fields: [profile_id], references: [id], onDelete: Cascade)
 }

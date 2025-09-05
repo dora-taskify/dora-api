@@ -1,5 +1,5 @@
 import express from "express"
-import { createItem, DeleteItem, isDoneItem, updateItem } from "@/controllers/item"
+import { createItem, deleteItem, isDoneItem, updateItem } from "@/controllers/item"
 import { authenticate } from '@/middlewares/authentication';
 import { boardMemberAccess } from '@/middlewares/boardMemberAccess';
 import { listMemberAccess } from '@/middlewares/listMemberAccess';
@@ -12,7 +12,7 @@ const route = express.Router()
 route.post('/item/:board_id/:list_id/:task_id', authenticate, boardMemberAccess, listMemberAccess, taskMemberAccess, createItem, errorHandler)
 route.patch('/item/:board_id/:list_id/:task_id/:item_id', authenticate, boardMemberAccess, listMemberAccess, taskMemberAccess, itemMemberAccess, isDoneItem, errorHandler)
 route.patch('/item/update/:board_id/:list_id/:task_id/:item_id', authenticate, boardMemberAccess, listMemberAccess, taskMemberAccess, itemMemberAccess, updateItem, errorHandler)
-route.delete('/item/:board_id/:list_id/:task_id/:item_id', authenticate, boardMemberAccess, listMemberAccess, taskMemberAccess, itemMemberAccess, DeleteItem, errorHandler)
+route.delete('/item/:board_id/:list_id/:task_id/:item_id', authenticate, boardMemberAccess, listMemberAccess, taskMemberAccess, itemMemberAccess, deleteItem, errorHandler)
 
 
 export default route
