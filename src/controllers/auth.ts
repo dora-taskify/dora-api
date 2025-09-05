@@ -1,18 +1,24 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { handleLoginAuth, handleRegisterAuth } from "@/services/auth";
 import { loginSchema, registerSchema } from "@/utils/validation";
 
-export async function registerAuth(req: Request, res: Response) {
+export async function registerAuth(req: Request, res: Response, next: NextFunction) {
     try {
-        const { email, password, username } = req.body;
-        const { error } = registerSchema.validate(req.body);
+        const { email, password, username } = req.body
+        const { error } = registerSchema.validate(req.body)
         if (error) {
-            throw Error(error.message)
+            throw {
+                code: 400,
+                message: error.message
+            }
         }
-        const result = await handleRegisterAuth(email, password, username);
-        const { data, registerErr, profile } = result;
+        const result = await handleRegisterAuth(email, password, username)
+        const { data, registerErr } = result
         if (!data || registerErr) {
-            throw Error(registerErr?.message)
+            throw {
+                code: 400,
+                message: registerErr?.message || "failed to register"
+            }
         }
         res.cookie("token", data.session?.access_token, {
             httpOnly: true,
@@ -25,27 +31,29 @@ export async function registerAuth(req: Request, res: Response) {
             status: "success",
             message: "register account success",
             data: data.user
-        });
+        })
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "register account errorr " + err.message
-        });
+        next(err)
     }
 }
 
-export async function loginAuth(req: Request, res: Response) {
+export async function loginAuth(req: Request, res: Response, next: NextFunction) {
     try {
         const { email, password } = req.body
         const { error } = loginSchema.validate(req.body)
         if (error) {
-            throw Error(error.message)
+            throw {
+                code: 400,
+                message: "wrong email or password"
+            }
         }
         const result = await handleLoginAuth(email, password)
         const { data, loginErr } = result;
         if (!data || loginErr) {
-            throw Error(loginErr?.message)
+            throw {
+                code: 401,
+                message: loginErr?.message || "invalid credentials"
+            }
         }
         res.cookie("token", data.session?.access_token, {
             httpOnly: true,
@@ -60,10 +68,6 @@ export async function loginAuth(req: Request, res: Response) {
             data: data.user
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "login account error " + err.message
-        });
+        next(err)
     }
 }

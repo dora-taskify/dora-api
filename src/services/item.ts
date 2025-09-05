@@ -6,7 +6,14 @@ export async function handleCreateItem(task_id: number, content: string) {
             content,
             task_id
         }
-    })
+    });
+
+    if (!data) {
+        throw {
+            code: 400,
+            message: "failed to create item"
+        };
+    }
 
     return data;
 }
@@ -20,9 +27,16 @@ export async function handleUpdateItem(task_id: number, item_id: number, content
         data: {
             content
         }
-    })
+    });
 
-    return data
+    if (!data) {
+        throw {
+            code: 404,
+            message: "item not found"
+        };
+    }
+
+    return data;
 }
 
 export async function handleIsDoneItem(task_id: number, id: number) {
@@ -31,30 +45,45 @@ export async function handleIsDoneItem(task_id: number, id: number) {
             id,
             task_id
         }
-    })
-    if (!item?.is_done) {
-        const data = prisma.item.update({
-            where: {
-                id
-            },
-            data: {
-                is_done: true
-            }
-        })
+    });
 
-        return data
+    if (!item) {
+        throw {
+            code: 404,
+            message: "item not found"
+        };
     }
-    if (item.is_done) {
-        const data = prisma.item.update({
-            where: {
-                id
-            },
-            data: {
-                is_done: false
-            }
-        })
 
-        return data
+    if (!item.is_done) {
+        const data = await prisma.item.update({
+            where: { id },
+            data: { is_done: true }
+        });
+
+        if (!data) {
+            throw {
+                code: 400,
+                message: "failed to update item"
+            };
+        }
+
+        return data;
+    }
+
+    if (item.is_done) {
+        const data = await prisma.item.update({
+            where: { id },
+            data: { is_done: false }
+        });
+
+        if (!data) {
+            throw {
+                code: 400,
+                message: "failed to update item"
+            };
+        }
+
+        return data;
     }
 }
 
@@ -64,7 +93,14 @@ export async function handleDeleteItem(task_id: number, item_id: number) {
             id: item_id,
             task_id
         }
-    })
+    });
 
-    return data
+    if (!data) {
+        throw {
+            code: 404,
+            message: "item not found"
+        };
+    }
+
+    return data;
 }

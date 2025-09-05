@@ -1,7 +1,5 @@
 import { handleDeleteMemberBoard, handleInviteMemberBoard, handleMemberBoard } from "@/services/member";
-import { Request, Response } from "express";
-
-export async function inviteMemberBoard(req: Request, res: Response) {
+export async function inviteMemberBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const { board_id } = req.params;
         const { profile_email } = req.body;
@@ -13,15 +11,11 @@ export async function inviteMemberBoard(req: Request, res: Response) {
             data: result,
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "invite member error: " + err.message,
-        });
+        next(err);
     }
 }
 
-export async function memberBoard(req: Request, res: Response) {
+export async function memberBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const board_id = (req as any).board.id;
         const result = await handleMemberBoard(Number(board_id));
@@ -32,15 +26,11 @@ export async function memberBoard(req: Request, res: Response) {
             data: result,
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "read member error: " + err.message,
-        });
+        next(err);
     }
 }
 
-export async function deleteMemberBoard(req: Request, res: Response) {
+export async function deleteMemberBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const { member_id } = req.params;
         const result = await handleDeleteMemberBoard(Number(member_id));
@@ -51,10 +41,6 @@ export async function deleteMemberBoard(req: Request, res: Response) {
             data: result,
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "delete member error: " + err.message,
-        });
+        next(err);
     }
 }

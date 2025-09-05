@@ -1,7 +1,7 @@
 import { handleArchieveBoard, handleCreateBoard, handleDeleteBoard, handleGetBoard, handleGetBoardDetail, handleUpdateBoard } from "@/services/board";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-export async function getBoard(req: Request, res: Response) {
+export async function getBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const email = (req as any).user.email;
         const result = await handleGetBoard(email);
@@ -12,20 +12,19 @@ export async function getBoard(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "get board error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function getBoardDetail(req: Request, res: Response) {
+export async function getBoardDetail(req: Request, res: Response, next: NextFunction) {
     try {
         const board_id = (req as any).board.id;
         const result = await handleGetBoardDetail(board_id);
         if (!result) {
-            throw Error("board not found")
+            throw {
+                code: 404,
+                message: "board not found"
+            }
         }
         return res.status(200).json({
             code: 200,
@@ -34,15 +33,11 @@ export async function getBoardDetail(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "get board detail error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function createBoard(req: Request, res: Response) {
+export async function createBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const email = (req as any).user.email;
         const { name } = req.body
@@ -54,15 +49,11 @@ export async function createBoard(req: Request, res: Response) {
             data: result
         })
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "create board error " + err.message
-        })
+        next(err);
     }
 }
 
-export async function updateBoard(req: Request, res: Response) {
+export async function updateBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const board_id = (req as any).board.id;
         const { name } = req.body;
@@ -74,19 +65,18 @@ export async function updateBoard(req: Request, res: Response) {
             data: result
         })
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "update board error " + err.message
-        })
+        next(err);
     }
 }
 
-export async function archieveBoard(req: Request, res: Response) {
+export async function archieveBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const isOwner = (req as any).isOwner;
         if (!isOwner) {
-            throw Error("only owner can archieved this board")
+            throw {
+                code: 403,
+                message: "only owner can archieve this board"
+            }
         }
         const board_id = (req as any).board.id;
         const result = await handleArchieveBoard(board_id)
@@ -97,19 +87,18 @@ export async function archieveBoard(req: Request, res: Response) {
             data: result
         })
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "archieve board error " + err.message
-        })
+        next(err);
     }
 }
 
-export async function deleteBoard(req: Request, res: Response) {
+export async function deleteBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const isOwner = (req as any).isOwner;
         if (!isOwner) {
-            throw Error("only owner can delete this board")
+            throw {
+                code: 403,
+                message: "only owner can delete this board"
+            }
         }
         const board_id = (req as any).board.id;
         await handleDeleteBoard(board_id)
@@ -119,10 +108,6 @@ export async function deleteBoard(req: Request, res: Response) {
             message: "delete board success",
         })
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "delete board error " + err.message
-        })
+        next(err);
     }
 }

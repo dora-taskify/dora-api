@@ -1,8 +1,8 @@
 import { label } from "@/generated/prisma";
 import { handleCreateTask, handleDeleteTask, handleGetTask, handleGetTaskDetail, handleMoveTask, handleUpdateTask } from "@/services/taks";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-export async function getTask(req: Request, res: Response) {
+export async function getTask(req: Request, res: Response, next: NextFunction) {
     try {
         const list = (req as any).list
         const { prio, sortDeadline } = req.query
@@ -20,15 +20,11 @@ export async function getTask(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "get task error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function getTaskDetail(req: Request, res: Response) {
+export async function getTaskDetail(req: Request, res: Response, next: NextFunction) {
     try {
         const task_id = (req as any).task.id;
         const result = await handleGetTaskDetail(Number(task_id))
@@ -39,15 +35,11 @@ export async function getTaskDetail(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "get task detail error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function createTask(req: Request, res: Response) {
+export async function createTask(req: Request, res: Response, next: NextFunction) {
     try {
         const list_id = (req as any).list.id
         const { name, description, deadline, priority } = req.body;
@@ -59,15 +51,11 @@ export async function createTask(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "create task error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function updateTask(req: Request, res: Response) {
+export async function updateTask(req: Request, res: Response, next: NextFunction) {
     try {
         const task_id = (req as any).task.id;
         const { name, description, priority } = req.body;
@@ -79,15 +67,11 @@ export async function updateTask(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "update task error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function deleteTask(req: Request, res: Response) {
+export async function deleteTask(req: Request, res: Response, next: NextFunction) {
     try {
         const list_id = (req as any).list.id;
         const task_id = (req as any).task.id;
@@ -99,15 +83,11 @@ export async function deleteTask(req: Request, res: Response) {
             data: result
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "get task error " + err.message
-        });
+        next(err);
     }
 }
 
-export async function moveTask(req: Request, res: Response) {
+export async function moveTask(req: Request, res: Response, next: NextFunction) {
     try {
         const task_id = (req as any).task.id;
         const board_id = (req as any).board.id;
@@ -120,10 +100,6 @@ export async function moveTask(req: Request, res: Response) {
             data: result,
         });
     } catch (err: any) {
-        return res.status(500).json({
-            code: 500,
-            status: "error",
-            message: "Move task error: " + err.message,
-        });
+        next(err);
     }
 }
