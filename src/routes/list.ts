@@ -13,4 +13,5 @@ route.put('/list/:board_id/:list_id', authenticate, boardMemberAccess, listMembe
 route.patch('/list/:board_id/:list_id', authenticate, boardMemberAccess, listMemberAccess, archieveList, errorHandler)
 route.delete('/list/:board_id/:list_id', authenticate, boardMemberAccess, listMemberAccess, deleteList, errorHandler)
 
+
 export default route

@@ -1,6 +1,4 @@
 import { handleDeleteMemberBoard, handleInviteMemberBoard, handleMemberBoard } from "@/services/member";
-import { NextFunction, Request, Response } from "express";
-
 export async function inviteMemberBoard(req: Request, res: Response, next: NextFunction) {
     try {
         const { board_id } = req.params;

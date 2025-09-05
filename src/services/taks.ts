@@ -109,6 +109,7 @@ export async function handleMoveTask(board_id: number, task_id: number, destinat
     const data = await prisma.$transaction(async (tx) => {
         const list = await tx.list.findUnique({
             where: { id: destinationListId }
+
         });
 
         if (!list) {

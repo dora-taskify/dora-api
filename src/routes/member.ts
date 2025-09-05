@@ -10,4 +10,5 @@ route.post('/member/:board_id', authenticate, boardMemberAccess, inviteMemberBoa
 route.get('/member/:board_id', authenticate, boardMemberAccess, memberBoard, errorHandler)
 route.delete('/member/:board_id/:member_id', authenticate, boardMemberAccess, deleteMemberBoard, errorHandler)
 
+
 export default route
