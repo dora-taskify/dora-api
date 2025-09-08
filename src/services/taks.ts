@@ -8,6 +8,7 @@ export async function handleGetTask(list_id: number, prio?: label, sortDeadline?
             ...(prio && { priority: prio })
         },
         orderBy: {
+            position: "asc",
             deadline: sortDeadline
         }
     });
