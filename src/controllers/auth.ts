@@ -71,3 +71,16 @@ export async function loginAuth(req: Request, res: Response, next: NextFunction)
         next(err)
     }
 }
+
+export function logoutAuth(req: Request, res: Response, next: NextFunction) {
+    try {
+        res.clearCookie("token");
+        return res.status(200).json({
+            code: 200,
+            status: "success",
+            message: "logout account success"
+        });
+    } catch (err: any) {
+        next(err);
+    }
+}
