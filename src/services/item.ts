@@ -54,7 +54,7 @@ export async function handleIsDoneItem(task_id: number, id: number) {
         };
     }
 
-    if (!item.is_done) {
+    if (item.is_done === false) {
         const data = await prisma.item.update({
             where: { id },
             data: { is_done: true }
@@ -70,7 +70,7 @@ export async function handleIsDoneItem(task_id: number, id: number) {
         return data;
     }
 
-    if (item.is_done) {
+    if (item.is_done === true) {
         const data = await prisma.item.update({
             where: { id },
             data: { is_done: false }

@@ -1,5 +1,5 @@
 import { label } from "@/generated/prisma";
-import { handleCreateTask, handleDeleteTask, handleGetTask, handleGetTaskDetail, handleMoveTask, handleUpdateTask } from "@/services/taks";
+import { handleCreateTask, handleDeleteTask, handleGetTask, handleGetTaskDetail, handleIsDoneTask, handleMoveTask, handleUpdateTask } from "@/services/taks";
 import { NextFunction, Request, Response } from "express";
 
 export async function getTask(req: Request, res: Response, next: NextFunction) {
@@ -93,6 +93,21 @@ export async function moveTask(req: Request, res: Response, next: NextFunction) 
         const board_id = (req as any).board.id;
         const { destinationListId, newPosition } = req.body;
         const result = await handleMoveTask(board_id, task_id, Number(destinationListId), Number(newPosition));
+        return res.status(200).json({
+            code: 200,
+            status: "success",
+            message: "Move task success",
+            data: result,
+        });
+    } catch (err: any) {
+        next(err);
+    }
+}
+
+export async function isDoneTask(req: Request, res: Response, next: NextFunction) {
+    try {
+        const task_id = (req as any).task.id;
+        const result = await handleIsDoneTask(task_id);
         return res.status(200).json({
             code: 200,
             status: "success",

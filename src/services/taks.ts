@@ -8,6 +8,7 @@ export async function handleGetTask(list_id: number, prio?: label, sortDeadline?
             ...(prio && { priority: prio })
         },
         orderBy: {
+            position: "asc",
             deadline: sortDeadline
         }
     });
@@ -157,4 +158,30 @@ export async function handleMoveTask(board_id: number, task_id: number, destinat
     });
 
     return data;
+}
+
+export async function handleIsDoneTask(task_id: number) {
+    const task = await prisma.task.findUnique({
+        where: { id: task_id }
+    })
+    if (!task) {
+        throw {
+            code: 404,
+            message: "task not found"
+        }
+    }
+    if (task.is_done === false) {
+        const data = await prisma.task.update({
+            where: { id: task_id },
+            data: { is_done: true }
+        });
+        return data;
+    }
+    if (task.is_done === true) {
+        const data = await prisma.task.update({
+            where: { id: task_id },
+            data: { is_done: false }
+        });
+        return data;
+    }
 }
