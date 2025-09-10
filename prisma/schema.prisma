@@ -37,7 +37,7 @@ model board {
   updated_at DateTime @updatedAt()
   image String?
   is_archieved Boolean @default(false)
-  profile profile @relation(fields: [created_by], references: [id])
+  profile profile @relation(fields: [created_by], references: [id], onDelete: Cascade)
 
   list list[]
 
